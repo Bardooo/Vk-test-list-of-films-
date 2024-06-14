@@ -12,3 +12,37 @@
 a {
   text-decoration: none;
 }
+
+.film__group {
+  display: flex;
+  flex-wrap: wrap;
+  border: none; 
+  align-self: stretch;
+}
+
+.asdasd {
+  align-self: stretch;
+}
+
+.film-card {
+  align-self: stretch;
+  display: grid;
+  display: 1;
+  align-items: center;
+  border-radius: 12px;
+  width: 240px;
+
+  &__img {
+    margin: 20px auto 0;
+    width: 205px;
+    height: 307px;
+  }
+  &__title {
+    text-align: center;
+    max-width: 224px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 15px;
+    white-space: normal;
+  }
+}

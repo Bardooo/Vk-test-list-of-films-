@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { selectFilmsData } from './redux/films/selectors';
 import './scss/App.scss';
 import {
   AppRoot,
@@ -10,10 +12,26 @@ import {
   Group,
   SimpleCell,
   usePlatform,
+  List,
 } from '@vkontakte/vkui';
+import React from 'react';
+import { fetchFilms } from './redux/films/asyncActions';
+import { useAppDispatch } from './redux/store';
+import FilmCard from './components/FilmCard';
 
 const App = () => {
   const platform = usePlatform();
+  const dispatch = useAppDispatch();
+
+  const { items, status } = useSelector(selectFilmsData);
+
+  const getFilms = async () => {
+    dispatch(fetchFilms());
+  };
+
+  React.useEffect(() => {
+    getFilms();
+  }, []);
 
   return (
     <AppRoot>
@@ -21,11 +39,22 @@ const App = () => {
         <SplitCol autoSpaced>
           <View activePanel="main">
             <Panel id="main">
-              <PanelHeader>VKUI</PanelHeader>
-              <Group header={<Header mode="secondary">Items</Header>}>
-                <SimpleCell>Hello</SimpleCell>
-                <SimpleCell>World</SimpleCell>
-              </Group>
+              <PanelHeader>Тестовое задание</PanelHeader>
+              <Header mode="secondary">Список фильмов</Header>
+              <List>
+                <Group className="film__group">
+                  {items.map((item, index) => (
+                    <SimpleCell key={index}>
+                      <FilmCard
+                        name={item.name}
+                        year={item.year}
+                        rating={item.rating}
+                        poster={item.poster}
+                      />
+                    </SimpleCell>
+                  ))}
+                </Group>
+              </List>
             </Panel>
           </View>
         </SplitCol>
