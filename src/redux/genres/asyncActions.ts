@@ -4,7 +4,7 @@ import { Genre } from './types'
 
 const options = {
   method: 'GET',
-  headers: {accept: 'application/json', 'X-API-KEY': 'Z0YAZQF-BWQM317-K2MS6WX-SWA58YT'}
+  headers: {accept: 'application/json', 'X-API-KEY': 'HNNXBS0-MT3MQXW-PZ7C4BW-FC6PRH8'}
 };
 
 export const fetchGenres = createAsyncThunk<Genre[]>(

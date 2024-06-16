@@ -1,10 +1,11 @@
 export type Film = {
-  name: string,
-  poster: string,
-  description: string,
-  rating: number,
-  year: number,
-  genres: [{name: string}],
+  id: number;
+  name: string;
+  description: string | null;
+  poster: string;
+  rating: string;
+  year: string;
+  genres: { name: string }[];
 };
 
 export enum Status {

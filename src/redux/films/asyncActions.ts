@@ -4,11 +4,12 @@ import { Film } from './types'
 
 const options = {
   method: 'GET',
-  headers: { accept: 'application/json', 'X-API-KEY': 'Z0YAZQF-BWQM317-K2MS6WX-SWA58YT' },
+  headers: { accept: 'application/json', 'X-API-KEY': 'HNNXBS0-MT3MQXW-PZ7C4BW-FC6PRH8' },
 };
 
 export type fetchFilmsProps = {
   page: number,
+  limit: number,
   selectedYears: any, 
   selectedRating: any,
   selectedGenres: any
@@ -16,14 +17,15 @@ export type fetchFilmsProps = {
 
 export const fetchFilms = createAsyncThunk<Film[], fetchFilmsProps>(
   'films/fetchfilmsStatus',
-  async ({page, selectedYears, selectedRating, selectedGenres}) => {
-    if (selectedYears.length === 0 && selectedRating.length === 0 && selectedGenres.length === 0) {
+  async ({page, limit, selectedYears, selectedRating, selectedGenres}) => {
+    if (selectedYears.length === new Date().getFullYear() - 1990 && selectedRating.length === 100 && selectedGenres.length === 0) {
       const { data } = await axios.get(
-        `https://api.kinopoisk.dev/v1.4/movie?page=${page}&limit=50`,
+        `https://api.kinopoisk.dev/v1.4/movie?page=${page}&limit=${limit}`,
         options,
       );
       const transformedData = data.docs.map((item) => {
         return {
+          id: item.id,
           name: item?.name || item.alternativeName,
           poster: item?.poster?.url || "https://www.kino-teatr.ru/static/images/no_poster.jpg",
           description: item.description,
@@ -44,13 +46,14 @@ export const fetchFilms = createAsyncThunk<Film[], fetchFilmsProps>(
           genre+=`&genres.name=${item.value}`
         })
       }
-      let url = `https://api.kinopoisk.dev/v1.4/movie?page=${page}&limit=50${year}${rating}${genre}`
+      let url = `https://api.kinopoisk.dev/v1.4/movie?page=${page}&limit=${limit}${year}${rating}${genre}`
       const { data } = await axios.get(
         url,
         options,
       );
       const transformedData = data.docs.map((item) => {
         return {
+          id: item.id,
           name: item?.name || item.alternativeName,
           poster: item?.poster?.url || "https://www.kino-teatr.ru/static/images/no_poster.jpg",
           description: item.description,

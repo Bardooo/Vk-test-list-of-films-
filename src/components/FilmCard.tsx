@@ -1,20 +1,20 @@
-import { Group, SimpleCell } from '@vkontakte/vkui';
+import { Group, List, SimpleCell, Title, Text } from '@vkontakte/vkui';
+import { Film } from '../redux/films/types';
 
-type FilmCardProps = {
-  name: string;
-  year: number;
-  rating: number;
-  poster: string | null;
-};
-
-const FilmCard: React.FC<FilmCardProps> = ({ name, year, rating, poster }) => {
+const FilmCard: React.FC<Film> = (film) => {
   return (
     <>
-      <Group className="film-card">
-        <img className="film-card__img" src={poster} alt="постер" />
-        <h5 className="film-card__title">{name}</h5>
-        <SimpleCell after={<p>рейтинг: {rating}</p>}>год: {year}</SimpleCell>
-      </Group>
+      <List>
+        <Group className="film-card">
+          <img className="film-card__img" src={film.poster} alt="постер" />
+          <div className="film-card__main">
+            <Title className="film-card__title">{film.name}</Title>
+            <Text style={{}}>{film.description}</Text>
+            <SimpleCell after={<p>рейтинг: {film.rating}</p>}>год: {film.year}</SimpleCell>
+            <Text>Жанры: </Text>
+          </div>
+        </Group>
+      </List>
     </>
   );
 };
