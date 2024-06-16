@@ -14,6 +14,6 @@ export enum Status {
 }
 
 export interface FilmSliceState {
-  items: Film[];
-  status: Status;
+  filmItems: Film[];
+  filmStatus: Status;
 }

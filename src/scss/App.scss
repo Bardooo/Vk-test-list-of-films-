@@ -18,31 +18,24 @@ a {
   flex-wrap: wrap;
   border: none; 
   align-self: stretch;
-}
-
-.asdasd {
-  align-self: stretch;
+  justify-content: center;
 }
 
 .film-card {
   align-self: stretch;
   display: grid;
   display: 1;
-  align-items: center;
   border-radius: 12px;
   width: 240px;
+  margin: 15px 20px 15px 20px;
 
-  &__img {
-    margin: 20px auto 0;
-    width: 205px;
+  img {
     height: 307px;
+    width: 205px;
+    margin: 20px auto 0;
   }
-  &__title {
-    text-align: center;
-    max-width: 224px;
-    font-size: 16px;
-    font-weight: 500;
-    margin-top: 15px;
-    white-space: normal;
-  }
+}
+
+.pagination {
+  margin-bottom: 20px;
 }
