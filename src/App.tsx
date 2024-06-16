@@ -10,16 +10,18 @@ import {
   PanelHeader,
   Header,
   Group,
-  SimpleCell,
   usePlatform,
   List,
   ContentCard,
   Pagination,
   FormItem,
   ChipsSelect,
+  Slider,
+  Button,
+  Div,
 } from '@vkontakte/vkui';
 import React from 'react';
-import { fetchFilms } from './redux/films/asyncActions';
+import { fetchFilms, fetchFilmsProps } from './redux/films/asyncActions';
 import { useAppDispatch } from './redux/store';
 import FilmCard from './components/FilmCard';
 import { selectGenresData } from './redux/genres/selectors';
@@ -33,50 +35,47 @@ const App = () => {
   const [selectedGenres, setSelectedGenres] = React.useState([]);
   const [selectedYears, setSelectedYears] = React.useState([]);
   const [selectedRating, setSelectedRating] = React.useState([]);
-  const [filters, setFilters] = React.useState();
 
   const { filmItems, filmStatus } = useSelector(selectFilmsData);
   const { genreItems } = useSelector(selectGenresData);
 
-  const getYears = () => {
-    const data = [];
-    for (let i = 1990; i <= new Date().getFullYear(); i++) {
-      data.push({
-        value: i,
-        label: i,
-      });
-    }
-    return data;
+  const fetchProps = {
+    page: currentPage,
+    selectedYears: selectedYears,
+    selectedRating: selectedRating,
+    selectedGenres: selectedGenres,
   };
-  const years = getYears();
 
-  const getRating = () => {
-    const data = [];
-    for (let i = 0.1; i <= 10; i += 0.1) {
-      const value = parseFloat(i.toFixed(1));
-      data.push({
-        value: value,
-        label: value,
-      });
-    }
-    return data;
+  const fetchFilterFilms = () => {
+    const fetchProps = {
+      page: currentPage,
+      selectedYears: selectedYears,
+      selectedRating: selectedRating,
+      selectedGenres: selectedGenres,
+    };
+    dispatch(fetchFilms(fetchProps));
   };
-  const rating = getRating();
 
   const handleChange = React.useCallback((page: number) => {
+    const fetchProps = {
+      page: page,
+      selectedYears: selectedYears,
+      selectedRating: selectedRating,
+      selectedGenres: selectedGenres,
+    };
     setCurrentPage(page);
-    getFilms(page);
+    getFilms(fetchProps);
   }, []);
 
-  const getFilms = async (currentPage: number) => {
-    dispatch(fetchFilms(currentPage));
+  const getFilms = async (fetchProps: fetchFilmsProps) => {
+    dispatch(fetchFilms(fetchProps));
   };
   const getGenres = async () => {
     dispatch(fetchGenres());
   };
 
   React.useEffect(() => {
-    getFilms(currentPage);
+    getFilms(fetchProps);
     getGenres();
   }, []);
 
@@ -102,30 +101,37 @@ const App = () => {
                       closeAfterSelect={false}
                     />
                   </FormItem>
-                  <FormItem htmlFor="years" top="Выберите года">
-                    <ChipsSelect
-                      id="years"
-                      value={selectedYears}
-                      onChange={setSelectedYears}
-                      options={years}
-                      placeholder="Не выбраны"
-                      emptyText="Совсем ничего не найдено"
-                      selectedBehavior="hide"
-                      closeAfterSelect={false}
+                  <FormItem top="Выберите года">
+                    <Slider
+                      min={1990}
+                      max={new Date().getFullYear()}
+                      withTooltip
+                      multiple
+                      step={1}
+                      onChange={(val) => {
+                        setSelectedYears(val);
+                      }}
+                      defaultValue={[1990, new Date().getFullYear()]}
                     />
                   </FormItem>
-                  <FormItem htmlFor="rating" top="Выберите рейтинг">
-                    <ChipsSelect
-                      id="rating"
-                      value={selectedRating}
-                      onChange={setSelectedRating}
-                      options={rating}
-                      placeholder="Не выбраны"
-                      emptyText="Совсем ничего не найдено"
-                      selectedBehavior="hide"
-                      closeAfterSelect={false}
+                  <FormItem top="Выберите рейтинг">
+                    <Slider
+                      min={0}
+                      max={10}
+                      withTooltip
+                      multiple
+                      step={0.1}
+                      onChange={(val) => {
+                        setSelectedRating(val);
+                      }}
+                      defaultValue={[0, 10]}
                     />
                   </FormItem>
+                  <Div>
+                    <Button onClick={fetchFilterFilms} mode="primary">
+                      Отфильтровать
+                    </Button>
+                  </Div>
                 </Group>
                 <Header mode="secondary">Список фильмов</Header>
                 <Group className="film__group">
