@@ -7,10 +7,10 @@ const initialState: GenresSliceState = {
 };
 
 const GenresSlice = createSlice({
-  name: 'films',
+  name: 'genres',
   initialState,
   reducers: {
-    setItems(state, action: PayloadAction<Genre[]>) {
+    setGenres(state, action: PayloadAction<Genre[]>) {
       state.genreItems = action.payload;
     },
   },
@@ -27,6 +27,6 @@ const GenresSlice = createSlice({
   }
 })
 
-export const { setItems } = GenresSlice.actions;
+export const { setGenres } = GenresSlice.actions;
 
 export default GenresSlice.reducer;

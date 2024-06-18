@@ -1,9 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {Film, FilmSliceState, Status} from './types'
-import { fetchFilms } from './asyncActions'
+import {FilmsSliceState, Status} from './types'
+import { fetchFilms, FilmsType } from './asyncActions'
 
-const initialState: FilmSliceState = {
+const initialState: FilmsSliceState = {
   filmItems: [],
+  pages: 0,
   filmStatus: Status.LOADING
 };
 
@@ -11,8 +12,9 @@ const filmsSlice = createSlice({
   name: 'films',
   initialState,
   reducers: {
-    setItems(state, action: PayloadAction<Film[]>) {
-      state.filmItems = action.payload;
+    setItems(state, action: PayloadAction<FilmsType>) {
+      state.filmItems = action.payload.filmItems;
+      state.pages = action.payload.pages;
     },
   },
   extraReducers: (builder) => {
@@ -21,12 +23,14 @@ const filmsSlice = createSlice({
       state.filmStatus = Status.LOADING;
     });
     builder.addCase(fetchFilms.fulfilled, (state, action) => {
-      state.filmItems = action.payload;
+      state.filmItems = action.payload.filmItems;
+      state.pages = action.payload.pages;
       state.filmStatus = Status.SUCCESS;
     });
     builder.addCase(fetchFilms.rejected, (state) => {
       state.filmStatus = Status.ERROR;
       state.filmItems = [];
+      state.pages = 0
     });
   }
 })

@@ -14,32 +14,34 @@ import {
   Div,
   Link,
   Title,
+  ButtonGroup,
 } from '@vkontakte/vkui';
 import { fetchFilms, fetchFilmsProps } from '../redux/films/asyncActions';
 import { useAppDispatch } from '../redux/store';
 import { selectGenresData } from '../redux/genres/selectors';
 import { fetchGenres } from '../redux/genres/asyncActions';
+import { Status } from '../redux/films/types';
 
-type Slider = [number, number];
+type SliderFilters = [number, number];
+
+const LIMIT = 50;
 
 const Home = () => {
   const dispatch = useAppDispatch();
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(5);
   const [selectedGenres, setSelectedGenres] = React.useState([]);
-  const [selectedYears, setSelectedYears] = React.useState<Slider>([
+  const [selectedYears, setSelectedYears] = React.useState<SliderFilters>([
     1990,
     new Date().getFullYear(),
   ]);
-  const [selectedRating, setSelectedRating] = React.useState<Slider>([0, 10]);
+  const [selectedRating, setSelectedRating] = React.useState<SliderFilters>([0, 10]);
 
-  const { filmItems, filmStatus } = useSelector(selectFilmsData);
+  const { filmItems, pages, filmStatus } = useSelector(selectFilmsData);
   const { genreItems } = useSelector(selectGenresData);
 
-  const currentLimit = 50;
   const fetchProps = {
     page: currentPage,
-    limit: currentLimit,
+    limit: LIMIT,
     selectedYears: selectedYears,
     selectedRating: selectedRating,
     selectedGenres: selectedGenres,
@@ -49,20 +51,22 @@ const Home = () => {
     setSelectedGenres([]);
     setSelectedYears([1990, new Date().getFullYear()]);
     setSelectedRating([0, 10]);
-    const fetchProps = {
-      page: currentPage,
-      limit: currentLimit,
-      selectedYears: selectedYears,
-      selectedRating: selectedRating,
-      selectedGenres: selectedGenres,
+
+    const fetchResetProps = {
+      page: 1,
+      limit: LIMIT,
+      selectedYears: [1990, 2024],
+      selectedRating: [0, 10],
+      selectedGenres: [],
     };
-    dispatch(fetchFilms(fetchProps));
+
+    dispatch(fetchFilms(fetchResetProps));
   };
 
   const fetchFilterFilms = () => {
     const fetchProps = {
       page: currentPage,
-      limit: currentLimit,
+      limit: LIMIT,
       selectedYears: selectedYears,
       selectedRating: selectedRating,
       selectedGenres: selectedGenres,
@@ -73,7 +77,7 @@ const Home = () => {
   const handleChange = React.useCallback((page: number) => {
     const fetchProps = {
       page: page,
-      limit: currentLimit,
+      limit: LIMIT,
       selectedYears: selectedYears,
       selectedRating: selectedRating,
       selectedGenres: selectedGenres,
@@ -82,10 +86,10 @@ const Home = () => {
     getFilms(fetchProps);
   }, []);
 
-  const getFilms = async (fetchProps: fetchFilmsProps) => {
+  const getFilms = (fetchProps: fetchFilmsProps) => {
     dispatch(fetchFilms(fetchProps));
   };
-  const getGenres = async () => {
+  const getGenres = () => {
     dispatch(fetchGenres());
   };
 
@@ -94,37 +98,98 @@ const Home = () => {
     getGenres();
   }, []);
 
-  if (filmStatus === 'error') {
+  if (filmStatus === Status.ERROR) {
     return (
       <List>
         <Header mode="secondary">Ошибка</Header>
         <Group className="filters">
-          <Title style={{ textAlign: 'center', marginTop: 50, marginBottom: 50 }}>
+          <Title style={{ textAlign: 'center', marginTop: 80, marginBottom: 80 }} className="title">
             Произошла ошибка при запросе данных с сервера
           </Title>
         </Group>
       </List>
     );
-  } else if (filmStatus === 'loading') {
+  }
+  if (filmStatus === Status.LOADING) {
     return (
-      <List>
-        <Header mode="secondary">Загрузка</Header>
+      <>
+        <Header mode="secondary">Фильтры</Header>
         <Group className="filters">
-          <Title style={{ textAlign: 'center', marginTop: 50, marginBottom: 50 }}>
-            Идет загрузка данных с сервера
-          </Title>
+          <FormItem htmlFor="genres" top="Выберите жанры">
+            <ChipsSelect
+              id="genres"
+              value={selectedGenres}
+              onChange={setSelectedGenres}
+              options={genreItems}
+              placeholder="Не выбраны"
+              emptyText="Совсем ничего не найдено"
+              selectedBehavior="hide"
+              closeAfterSelect={false}
+            />
+          </FormItem>
+          <FormItem top="Выберите года">
+            <Slider
+              id="year"
+              value={selectedYears}
+              min={1990}
+              max={new Date().getFullYear()}
+              withTooltip
+              multiple
+              step={1}
+              onChange={(val) => {
+                setSelectedYears(val);
+              }}
+              defaultValue={[1990, new Date().getFullYear()]}
+            />
+          </FormItem>
+          <FormItem top="Выберите рейтинг">
+            <Slider
+              id="rating"
+              value={selectedRating}
+              min={0}
+              max={10}
+              withTooltip
+              multiple
+              step={0.1}
+              onChange={(val) => {
+                setSelectedRating(val);
+              }}
+              defaultValue={[0, 10]}
+            />
+          </FormItem>
+          <Div>
+            <ButtonGroup mode="vertical" gap="m">
+              <Button onClick={fetchFilterFilms} mode="primary">
+                Отфильтровать
+              </Button>
+              <Button onClick={resetFilters} mode="secondary">
+                Сбросить фильтры
+              </Button>
+            </ButtonGroup>
+          </Div>
         </Group>
-      </List>
+        <List>
+          <Header mode="secondary">Загрузка</Header>
+          <Group className="filters">
+            <Title
+              style={{ textAlign: 'center', marginTop: 80, marginBottom: 80 }}
+              className="title">
+              Идет загрузка данных с сервера
+            </Title>
+          </Group>
+        </List>
+      </>
     );
-  } else if (filmItems.length === 0) {
+  }
+  if (filmItems.length === 0) {
     return (
       <List>
         <Header mode="secondary">Сожалеем</Header>
         <Group className="filters">
-          <Button onClick={resetFilters} mode="secondary" style={{ marginLeft: 15, marginTop: 15 }}>
+          <Button onClick={resetFilters} mode="secondary">
             Вернуться к началу
           </Button>
-          <Title style={{ textAlign: 'center', marginTop: 7, marginBottom: 50 }}>
+          <Title style={{ textAlign: 'center', marginTop: 50, marginBottom: 85 }} className="title">
             К сожалению фильмов, которые вы ищите, не нашлось(
           </Title>
         </Group>
@@ -132,7 +197,7 @@ const Home = () => {
     );
   }
   return (
-    <List>
+    <>
       <Header mode="secondary">Фильтры</Header>
       <Group className="filters">
         <FormItem htmlFor="genres" top="Выберите жанры">
@@ -178,36 +243,40 @@ const Home = () => {
           />
         </FormItem>
         <Div>
-          <Button onClick={fetchFilterFilms} style={{ marginRight: 15 }} mode="primary">
-            Отфильтровать
-          </Button>
-          <Button onClick={resetFilters} mode="secondary">
-            Сбросить фильтры
-          </Button>
+          <ButtonGroup mode="vertical" gap="m">
+            <Button onClick={fetchFilterFilms} mode="primary">
+              Отфильтровать
+            </Button>
+            <Button onClick={resetFilters} mode="secondary">
+              Сбросить фильтры
+            </Button>
+          </ButtonGroup>
         </Div>
       </Group>
-      <Header mode="secondary">Список фильмов</Header>
-      <Group className="film__group">
-        {filmItems.map((item) => (
-          <Link key={item.id} href={`/product-card/${item.id}`}>
-            <ContentCard
-              className="film-card"
-              src={item.poster}
-              alt="poster"
-              header={item.name}
-              text={item.year}
-              caption={item.rating}
-            />
-          </Link>
-        ))}
-      </Group>
-      <Pagination
-        className="pagination"
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onChange={handleChange}
-      />
-    </List>
+      <List>
+        <Header mode="secondary">Список фильмов</Header>
+        <Group className="film__group">
+          {filmItems.map((item) => (
+            <Link key={item.id} href={`/film/${item.id}`}>
+              <ContentCard
+                className="film-card"
+                src={item.poster}
+                alt="poster"
+                header={<div className="content-card-header">{item.name}</div>}
+                text={<div className="content-card-text">{item.year}</div>}
+                caption={<div className="content-card-caption">{item.rating}</div>}
+              />
+            </Link>
+          ))}
+        </Group>
+        <Pagination
+          className="pagination"
+          currentPage={currentPage}
+          totalPages={pages}
+          onChange={handleChange}
+        />
+      </List>
+    </>
   );
 };
 

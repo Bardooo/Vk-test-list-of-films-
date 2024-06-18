@@ -2,49 +2,34 @@ import { useParams } from 'react-router-dom';
 import React from 'react';
 
 import FilmCard from '../components/FilmCard';
-import { fetchFilms } from '../redux/films/asyncActions';
 import { useAppDispatch } from '../redux/store';
 import { useSelector } from 'react-redux';
-import { selectFilmsData } from '../redux/films/selectors';
-import { Button, Group, Header, List, Link } from '@vkontakte/vkui';
-import { Film } from '../redux/films/types';
+import { Button, Group, Header, List, Link, Div } from '@vkontakte/vkui';
+import { fetchFilm } from '../redux/film/asyncActions';
+import { selectFilmData } from '../redux/film/selectors';
 
 const Product = () => {
-  const [film, setFilm] = React.useState<Film>();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const currentPage = 1;
-  const currentLimit = 200;
-  const selectedYears = [];
-  const selectedRating = [];
-  const selectedGenres = [];
-  const fetchProps = {
-    page: currentPage,
-    limit: currentLimit,
-    selectedYears: selectedYears,
-    selectedRating: selectedRating,
-    selectedGenres: selectedGenres,
+  const filmId = {
+    id: Number(id),
   };
-
-  const { filmItems, filmStatus } = useSelector(selectFilmsData);
+  const { film, filmStatus } = useSelector(selectFilmData);
 
   React.useEffect(() => {
-    dispatch(fetchFilms(fetchProps));
-    filmItems.map((item) => {
-      if (Number(id) === item.id) {
-        setFilm(item);
-      }
-    });
+    dispatch(fetchFilm(filmId));
   }, []);
 
   return (
     <List>
       <Header mode="secondary">Карточка фильма</Header>
-      <Group className="film__group">
-        <Link href="/">
-          <Button>Вернуться назад</Button>
-        </Link>
-        {/* <FilmCard film={film} /> */}
+      <Group>
+        <Div>
+          <Link href="/">
+            <Button>Вернуться назад</Button>
+          </Link>
+        </Div>
+        <FilmCard film={film} />
       </Group>
     </List>
   );

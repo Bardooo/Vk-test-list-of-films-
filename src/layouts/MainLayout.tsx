@@ -19,7 +19,7 @@ const MainLayout: React.FC = () => {
         <SplitCol autoSpaced>
           <View activePanel="main">
             <Panel id="main">
-              <PanelHeader>Тестовое задание</PanelHeader>
+              <PanelHeader after>Тестовое задание</PanelHeader>
               <Outlet />
             </Panel>
           </View>

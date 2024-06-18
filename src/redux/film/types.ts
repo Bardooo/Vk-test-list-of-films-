@@ -1,10 +1,9 @@
 export type Film = {
-  id: number;
   name: string;
   description: string | null;
   poster: string;
   rating: string;
-  year: string;
+  year: number;
   genres: { name: string }[];
 };
 
@@ -14,8 +13,7 @@ export enum Status {
   ERROR = 'error',
 }
 
-export interface FilmsSliceState {
-  filmItems: Film[];
-  pages: number;
+export interface FilmSliceState {
+  film: Film;
   filmStatus: Status;
 }

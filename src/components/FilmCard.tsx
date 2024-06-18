@@ -1,21 +1,36 @@
-import { Group, List, SimpleCell, Title, Text } from '@vkontakte/vkui';
-import { Film } from '../redux/films/types';
+import { SimpleCell, Title, Text, Div } from '@vkontakte/vkui';
+import { Film } from '../redux/film/types';
 
-const FilmCard: React.FC<Film> = (film) => {
+type FilmCardProps = {
+  film: Film;
+};
+
+const FilmCard: React.FC<FilmCardProps> = ({ film }) => {
   return (
-    <>
-      <List>
-        <Group className="film-card">
-          <img className="film-card__img" src={film.poster} alt="постер" />
-          <div className="film-card__main">
-            <Title className="film-card__title">{film.name}</Title>
-            <Text style={{}}>{film.description}</Text>
-            <SimpleCell after={<p>рейтинг: {film.rating}</p>}>год: {film.year}</SimpleCell>
-            <Text>Жанры: </Text>
-          </div>
-        </Group>
-      </List>
-    </>
+    <Div className="film-page">
+      <img className="film-page__img" src={film.poster} alt="постер" />
+      <div className="film-page__main">
+        <div>
+          <Title className="film-page__title" style={{ marginBottom: 25 }}>
+            {film.name}
+          </Title>
+          {film.description === null ? (
+            <Text style={{ marginBottom: 30 }}>Описания пока нет</Text>
+          ) : (
+            <Text style={{ marginBottom: 30 }}>{film.description}</Text>
+          )}
+        </div>
+        <div>
+          <Text style={{ marginBottom: 5, fontSize: 20 }}>Жанры: </Text>
+          {film.genres.map((el, index) => (
+            <Text key={index}>{el.name}</Text>
+          ))}
+          <SimpleCell style={{ padding: 0, marginTop: 50 }} after={<p>{film.rating}</p>}>
+            <p className="film-page__year">год: {film.year}</p>
+          </SimpleCell>
+        </div>
+      </div>
+    </Div>
   );
 };
 
