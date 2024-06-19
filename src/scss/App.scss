@@ -107,3 +107,14 @@ a {
   margin-top: 50px;
   margin-bottom: 50px
 }
+
+.favorite .favorite-group {
+  display: flex;
+  flex-wrap: wrap;
+  border: none; 
+  align-self: stretch;
+  &::before {
+    border: none;
+    box-shadow: none!important;
+  }
+}

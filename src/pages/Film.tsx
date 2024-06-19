@@ -53,7 +53,7 @@ const Product = () => {
       <Group>
         <Div>
           <Link href="/">
-            <Button>Вернуться назад</Button>
+            <Button>Вернуться на главную</Button>
           </Link>
         </Div>
         <FilmCard film={film} />

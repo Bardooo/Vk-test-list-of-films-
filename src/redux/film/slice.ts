@@ -4,6 +4,7 @@ import { fetchFilm } from './asyncActions'
 
 const initialState: FilmSliceState = {
   film: {
+    id: 0,
     name: '',
     description: '',
     poster: '',
@@ -25,6 +26,7 @@ const filmSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchFilm.pending, (state) => {
       state.film = {
+        id: 0,
         name: '',
         description: '',
         poster: '',
@@ -41,6 +43,7 @@ const filmSlice = createSlice({
     builder.addCase(fetchFilm.rejected, (state) => {
       state.filmStatus = Status.ERROR;
       state.film = {
+        id: 0,
         name: '',
         description: '',
         poster: '',

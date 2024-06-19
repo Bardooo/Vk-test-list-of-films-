@@ -1,26 +1,12 @@
-import React, { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFilmsData } from '../redux/films/selectors';
-import {
-  Header,
-  Group,
-  List,
-  ContentCard,
-  Pagination,
-  FormItem,
-  ChipsSelect,
-  Slider,
-  Button,
-  Div,
-  Link,
-  Title,
-  ButtonGroup,
-} from '@vkontakte/vkui';
+import { Header, Group, List, ContentCard, Pagination, Button, Link, Title } from '@vkontakte/vkui';
 import { fetchFilms, fetchFilmsProps } from '../redux/films/asyncActions';
 import { useAppDispatch } from '../redux/store';
 import { fetchGenres } from '../redux/genres/asyncActions';
-import { Status } from '../redux/films/types';
-import { Icon12Add } from '@vkontakte/icons';
+import { Film, Status } from '../redux/films/types';
+import { Icon16Favorite, Icon16FavoriteOutline } from '@vkontakte/icons';
 import Filters from '../components/Filters';
 
 type SliderFilters = [number, number];
@@ -29,13 +15,14 @@ const LIMIT = 50;
 
 const Home = () => {
   const dispatch = useAppDispatch();
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [selectedGenres, setSelectedGenres] = React.useState([]);
-  const [selectedYears, setSelectedYears] = React.useState<SliderFilters>([
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedYears, setSelectedYears] = useState<SliderFilters>([
     1990,
     new Date().getFullYear(),
   ]);
-  const [selectedRating, setSelectedRating] = React.useState<SliderFilters>([0, 10]);
+  const [selectedRating, setSelectedRating] = useState<SliderFilters>([0, 10]);
+  const [favorites, setFavorites] = useState<{ [key: string]: Film }>({});
 
   const { filmItems, pages, filmStatus } = useSelector(selectFilmsData);
 
@@ -45,6 +32,21 @@ const Home = () => {
     selectedYears: selectedYears,
     selectedRating: selectedRating,
     selectedGenres: selectedGenres,
+  };
+
+  const addFavorite = (e, item) => {
+    e.preventDefault();
+    setFavorites((prevFavorites) => {
+      const updatedFavorites = { ...prevFavorites };
+      if (!updatedFavorites[item.id]) {
+        updatedFavorites[item.id] = item;
+      } else {
+        delete updatedFavorites[item.id];
+      }
+      const json = JSON.stringify(updatedFavorites);
+      localStorage.setItem('favorites', json);
+      return updatedFavorites;
+    });
   };
 
   const resetFilters = () => {
@@ -80,7 +82,7 @@ const Home = () => {
     dispatch(fetchGenres());
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getFilms(fetchProps);
     getGenres();
   }, []);
@@ -161,9 +163,10 @@ const Home = () => {
                   <div className="film-card__bottom">
                     <div className="film-card__caption">{item.rating}</div>
                     <Button
+                      onClick={(e) => addFavorite(e, item)}
                       className="film-card__button"
-                      appearance="accent"
-                      before={<Icon12Add />}
+                      appearance={favorites[item.id] ? 'overlay' : 'accent'}
+                      before={favorites[item.id] ? <Icon16Favorite /> : <Icon16FavoriteOutline />}
                     />
                   </div>
                 }

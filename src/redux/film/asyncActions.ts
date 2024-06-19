@@ -4,7 +4,7 @@ import { Film } from './types'
 
 const options = {
   method: 'GET',
-  headers: { accept: 'application/json', 'X-API-KEY': 'HNNXBS0-MT3MQXW-PZ7C4BW-FC6PRH8' },
+  headers: { accept: 'application/json', 'X-API-KEY': 'Z0YAZQF-BWQM317-K2MS6WX-SWA58YT' },
 };
 
 export type fetchFilmProps = {
@@ -19,6 +19,7 @@ export const fetchFilm = createAsyncThunk<Film, fetchFilmProps>(
       options,
     );
     const result = {
+      id: data.id,
       name: data?.name || data.alternativeName,
       description: data.description,
       poster: data?.poster?.url || "https://www.kino-teatr.ru/static/images/no_poster.jpg",
