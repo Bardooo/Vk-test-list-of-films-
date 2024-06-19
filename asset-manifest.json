@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Vk-test_list-of-films/static/css/main.31d494fa.css",
+    "main.js": "/Vk-test_list-of-films/static/js/main.05afa30a.js",
+    "index.html": "/Vk-test_list-of-films/index.html",
+    "main.31d494fa.css.map": "/Vk-test_list-of-films/static/css/main.31d494fa.css.map",
+    "main.05afa30a.js.map": "/Vk-test_list-of-films/static/js/main.05afa30a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.31d494fa.css",
+    "static/js/main.05afa30a.js"
+  ]
+}
