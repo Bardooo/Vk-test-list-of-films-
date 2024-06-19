@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import React from 'react';
+import { useEffect } from 'react';
 
 import FilmCard from '../components/FilmCard';
 import { useAppDispatch } from '../redux/store';
@@ -17,7 +17,7 @@ const Product = () => {
   };
   const { film, filmStatus } = useSelector(selectFilmData);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(fetchFilm(filmId));
   }, []);
 

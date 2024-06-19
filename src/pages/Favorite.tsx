@@ -1,9 +1,9 @@
-import { Icon12Add, Icon16Favorite } from '@vkontakte/icons';
-import { Button, ContentCard, Div, Group, Header, Link, List, SimpleCell } from '@vkontakte/vkui';
-import React from 'react';
+import { Icon16Favorite } from '@vkontakte/icons';
+import { Button, ContentCard, Group, Header, Link, List, SimpleCell } from '@vkontakte/vkui';
+import { useEffect, useState } from 'react';
 
 const Favorite = () => {
-  const [items, setItems] = React.useState([]);
+  const [items, setItems] = useState([]);
 
   const getFavoritesFromLS = () => {
     const items = [];
@@ -25,7 +25,7 @@ const Favorite = () => {
     });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getFavoritesFromLS();
   }, []);
 
