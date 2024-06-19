@@ -8,6 +8,8 @@ import {
   Panel,
   PanelHeader,
   usePlatform,
+  Button,
+  Link,
 } from '@vkontakte/vkui';
 
 const MainLayout: React.FC = () => {
@@ -19,7 +21,14 @@ const MainLayout: React.FC = () => {
         <SplitCol autoSpaced>
           <View activePanel="main">
             <Panel id="main">
-              <PanelHeader after>Тестовое задание</PanelHeader>
+              <PanelHeader
+                after={
+                  <Link href="/favorite">
+                    <Button>Избраннные</Button>
+                  </Link>
+                }>
+                Тестовое задание
+              </PanelHeader>
               <Outlet />
             </Panel>
           </View>
