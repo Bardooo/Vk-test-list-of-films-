@@ -9,3 +9,7 @@
 ## Запуск проекта:
 
 ### `npm start`
+
+## Ссылка на демо проекта:
+
+### https://Bardooo.github.io/Vk-test_list-of-films
