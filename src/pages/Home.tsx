@@ -152,7 +152,7 @@ const Home = () => {
         <Header mode="secondary">Список фильмов</Header>
         <Group className="film__group">
           {filmItems.map((item) => (
-            <Link key={item.id} href={`/film/${item.id}`}>
+            <Link key={item.id} href={`/Vk-test_list-of-films/film/${item.id}`}>
               <ContentCard
                 className="film-card"
                 src={item.poster}

@@ -52,7 +52,7 @@ const Product = () => {
       <Header mode="secondary">Карточка фильма</Header>
       <Group>
         <Div>
-          <Link href="/">
+          <Link href="/Vk-test_list-of-films">
             <Button>Вернуться на главную</Button>
           </Link>
         </Div>

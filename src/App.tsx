@@ -8,7 +8,7 @@ import Favorite from './pages/Favorite';
 const App = () => {
   return (
     <Routes>
-      <Route path="/Vk-test_list-of-films" element={<MainLayout />}>
+      <Route path="/Vk-test_list-of-films/" element={<MainLayout />}>
         <Route path="" element={<Home />} />
         <Route path="film/:id" element={<Film />} />
         <Route path="favorite" element={<Favorite />} />

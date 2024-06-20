@@ -34,7 +34,7 @@ const Favorite = () => {
       <>
         <Header size="large">У вас нет избранных фильмов</Header>
         <SimpleCell>
-          <Link href="/">
+          <Link href="/Vk-test_list-of-films">
             <Button>Вернуться на главную</Button>
           </Link>
         </SimpleCell>
@@ -47,13 +47,13 @@ const Favorite = () => {
       <Header mode="primary">"Избранные" фильмы</Header>
       <Group className="favorite">
         <SimpleCell>
-          <Link href="/">
+          <Link href="/Vk-test_list-of-films">
             <Button>Вернуться на главную</Button>
           </Link>
         </SimpleCell>
         <Group className="favorite-group">
           {items.map((item) => (
-            <Link key={item.id} href={`/film/${item.id}`}>
+            <Link key={item.id} href={`/Vk-test_list-of-films/film/${item.id}`}>
               <ContentCard
                 className="film-card"
                 src={item.poster}

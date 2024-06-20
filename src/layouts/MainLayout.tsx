@@ -23,7 +23,7 @@ const MainLayout: React.FC = () => {
             <Panel id="main">
               <PanelHeader
                 after={
-                  <Link href="/favorite">
+                  <Link href="/Vk-test_list-of-films/favorite">
                     <Button>Избраннные</Button>
                   </Link>
                 }>
